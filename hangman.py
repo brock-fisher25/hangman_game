@@ -24,14 +24,14 @@ def begin_game(difficulty):
     screen = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Hangman Game')
     font = pygame.font.Font('freesansbold.ttf', 32)
-    text = font.render('Guess the word below', True, black, white)
-    textRect = text.get_rect()
-    textRect.center = (500, 50)
+    titleText = font.render('Guess the word below', True, black, white)
+    titleTextSpot = titleText.get_rect()
+    titleTextSpot.center = (width / 2, height / 20)
     pygame.display.flip()
     running = True
     while running:
         screen.fill(white)
-        screen.blit(text, textRect)
+        screen.blit(titleText, titleTextSpot)
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
