@@ -27,15 +27,31 @@ def begin_game(difficulty):
     titleText = font.render('Guess the word below', True, black, white)
     titleTextSpot = titleText.get_rect()
     titleTextSpot.center = (width / 2, height / 20)
+    gallowSpot = pygame.image.load('pics/1st_img.JPG')
+    gallowSpot = pygame.transform.scale(gallowSpot, (400, 400))
+
+    numLetters = len(wordToGuess)
+    underscoreSpot = pygame.image.load('pics/Underscore.JPG')
+    underscoreSpot = pygame.transform.scale(underscoreSpot, (100, 100))
+
     pygame.display.flip()
     running = True
     while running:
         screen.fill(white)
         screen.blit(titleText, titleTextSpot)
+        screen.blit(gallowSpot, (width / 20, height / 5))
+        for i in range(numLetters):
+            screen.blit(underscoreSpot, (i * 100, 800))
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                guessedLetter = event.key
+                if guessedLetter in wordToGuess:
+                    successUpdate(guessedLetter)
+                else:
+                    missedUpdate(guessedLetter)
         pygame.display.update()
 
 
@@ -52,6 +68,10 @@ def getRandomWord(difficulty):
     else:
         return hardStrings[value]
     
+def successUpdate(guessedLetter):
+    return
+def missedUpdate(guessedLetter):
+    return
 
 
 if __name__ == "__main__":
