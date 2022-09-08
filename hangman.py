@@ -17,6 +17,8 @@ def start():
 
 def begin_game(difficulty):
     wordToGuess = getRandomWord(difficulty)
+    print(wordToGuess)
+    letterGuessedCorrect = [False for i in range(len(wordToGuess))]
     pygame.init()
     white = (255, 255, 255)
     black = (0, 0, 0)
@@ -31,13 +33,14 @@ def begin_game(difficulty):
     gallowSpot = pygame.image.load('pics/1_img.JPG')
     gallowSpot = pygame.transform.scale(gallowSpot, (350, 350))
     numLetters = len(wordToGuess)
-    underscoreSpot = pygame.image.load('pics/Underscore.JPG')
-    underscoreSpot = pygame.transform.scale(underscoreSpot, (100, 100))
+    underscore = pygame.image.load('pics/Underscore.JPG')
+    underscore = pygame.transform.scale(underscore, (100, 100))
 
     pygame.display.flip()
     running = True
     listOfLetters = 'a b c d e f g h i j k l m n o p q r s t u v w x y z'
     gallowCounter = 1
+    
     while running:
         letters = lettersFont.render(listOfLetters, True, black, white)
         lettersSpot = letters.get_rect()
@@ -47,8 +50,13 @@ def begin_game(difficulty):
         screen.blit(letters, lettersSpot)
         screen.blit(gallowSpot, (width / 20, height / 5))
         for i in range(numLetters):
-            screen.blit(underscoreSpot, (i * 100, 800))
-            
+            screen.blit(underscore, (i * 100, 800))
+        for i in range(len(wordToGuess)):
+            if letterGuessedCorrect[i] == True:
+                picToLoad = 'pics/alphabet/' + wordToGuess[i].upper() + '.JPG'
+                correctLetter = pygame.image.load(picToLoad)
+                correctLetter = pygame.transform.scale(correctLetter, (100,100))
+                screen.blit(correctLetter, (i * 100, 770))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -56,13 +64,16 @@ def begin_game(difficulty):
                 guessedLetter = event.key
                 guessedLetter = chr(guessedLetter)
                 if guessedLetter in wordToGuess:
-                    spotsInWord = successUpdate(guessedLetter, wordToGuess)
+                    for i in range(len(wordToGuess)):
+                        if wordToGuess[i] == guessedLetter:
+                            letterGuessedCorrect[i] = True
                     listOfLetters = updateLetters(listOfLetters, guessedLetter)
                 else:
                     gallowCounter += 1
                     gallowSpot = missedUpdate(gallowCounter)
                     listOfLetters = updateLetters(listOfLetters, guessedLetter)
         pygame.display.update()
+
 
 def updateLetters(listOfLetters, guessedLetter):
     for i in range(len(listOfLetters)):
@@ -83,6 +94,7 @@ def getRandomWord(difficulty):
     hardStrings = ['alleged', 'anxious', 'counter', 'general', 'healthy', 'library', 'massive', 'quarter', 'reflect']
     seed(1)
     value = randint(0,8)
+    print(value)
     if difficulty == "Easy":
         return easyStrings[value]
     elif difficulty == "Medium":
