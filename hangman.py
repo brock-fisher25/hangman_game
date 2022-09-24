@@ -92,7 +92,6 @@ def getRandomWord(difficulty):
     easyStrings = ['wench', 'divot', 'rough', 'bless', 'hello', 'leapt', 'fluke', 'steal', 'pound']
     medStrings = ['abroad', 'accept', 'demand', 'degree', 'easily', 'series', 'silver', 'single', 'slight']
     hardStrings = ['alleged', 'anxious', 'counter', 'general', 'healthy', 'library', 'massive', 'quarter', 'reflect']
-    seed(1)
     value = randint(0,8)
     print(value)
     if difficulty == "Easy":
