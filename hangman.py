@@ -40,6 +40,7 @@ def begin_game(difficulty):
     running = True
     listOfLetters = 'a b c d e f g h i j k l m n o p q r s t u v w x y z'
     gallowCounter = 1
+    letterCounter = 0
     
     while running:
         letters = lettersFont.render(listOfLetters, True, black, white)
@@ -57,6 +58,12 @@ def begin_game(difficulty):
                 correctLetter = pygame.image.load(picToLoad)
                 correctLetter = pygame.transform.scale(correctLetter, (100,100))
                 screen.blit(correctLetter, (i * 100, 770))
+        if letterCounter == len(wordToGuess):
+            wonGame(wordToGuess)
+            return
+        if gallowCounter == 7:
+            lostGame(wordToGuess)
+            return
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -67,6 +74,7 @@ def begin_game(difficulty):
                     for i in range(len(wordToGuess)):
                         if wordToGuess[i] == guessedLetter:
                             letterGuessedCorrect[i] = True
+                            letterCounter += 1
                     listOfLetters = updateLetters(listOfLetters, guessedLetter)
                 else:
                     gallowCounter += 1
@@ -88,25 +96,43 @@ def updateLetters(listOfLetters, guessedLetter):
         if listOfLetters[i] == " " and listOfLetters[i+1] == " ":
             listOfLetters = listOfLetters[:i] + listOfLetters[i+1:]
     return listOfLetters
+
 def getRandomWord(difficulty):
     easyStrings = ['wench', 'divot', 'rough', 'bless', 'hello', 'leapt', 'fluke', 'steal', 'pound']
     medStrings = ['abroad', 'accept', 'demand', 'degree', 'easily', 'series', 'silver', 'single', 'slight']
     hardStrings = ['alleged', 'anxious', 'counter', 'general', 'healthy', 'library', 'massive', 'quarter', 'reflect']
     value = randint(0,8)
-    print(value)
     if difficulty == "Easy":
         return easyStrings[value]
     elif difficulty == "Medium":
         return medStrings[value]
     else:
         return hardStrings[value]
-    
-def successUpdate(guessedLetter, wordToGuess):
-    spotsInWord = []
-    for i in range(len(wordToGuess)):
-        if wordToGuess[i] == guessedLetter:
-            spotsInWord.append(i)
-    return spotsInWord
+
+def lostGame(wordToGuess):
+    event, values = sg.Window('Loser', [[sg.Text('You lost the game. The word was ' + wordToGuess + '. Would you like to play again?'), sg.Listbox(['Yes', 'No'], size=(20, 3), key='LB')],
+        [sg.Button('Ok'), sg.Button('Cancel')]]).read(close=True)
+    if event == 'Ok':
+        playAgain = values["LB"][0]
+        if playAgain == "Yes":
+            start()
+        else:
+            sg.popup_cancel('User aborted')
+    else:
+        sg.popup_cancel('User aborted')
+
+def wonGame(wordToGuess):
+    event, values = sg.Window('Winner!', [[sg.Text('You won the game! The word was ' + wordToGuess + '. Would you like to play again?'), sg.Listbox(['Yes', 'No'], size=(20, 3), key='LB')],
+        [sg.Button('Ok'), sg.Button('Cancel')]]).read(close=True)
+    if event == 'Ok':
+        playAgain = values["LB"][0]
+        if playAgain == "Yes":
+            start()
+        else:
+            sg.popup_cancel('User aborted')
+    else:
+        sg.popup_cancel('User aborted')
+
 def missedUpdate(gallowCounter):
     fileNum = 'pics/' + str(gallowCounter) + "_img.JPG"
     gallowSpot = pygame.image.load(fileNum)
