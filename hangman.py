@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 import pygame
-from random import seed
 from random import randint
+import csv
 
 def start():
     event, values = sg.Window('Choose an option', [[sg.Text('Select a difficulty level'), sg.Listbox(['Easy', 'Medium', 'Hard'], size=(20, 3), key='LB')],
@@ -35,7 +35,6 @@ def begin_game(difficulty):
     numLetters = len(wordToGuess)
     underscore = pygame.image.load('pics/Underscore.JPG')
     underscore = pygame.transform.scale(underscore, (100, 100))
-
     pygame.display.flip()
     running = True
     listOfLetters = 'a b c d e f g h i j k l m n o p q r s t u v w x y z'
@@ -98,16 +97,14 @@ def updateLetters(listOfLetters, guessedLetter):
     return listOfLetters
 
 def getRandomWord(difficulty):
-    easyStrings = ['wench', 'divot', 'rough', 'bless', 'hello', 'leapt', 'fluke', 'steal', 'pound']
-    medStrings = ['abroad', 'accept', 'demand', 'degree', 'easily', 'series', 'silver', 'single', 'slight']
-    hardStrings = ['alleged', 'anxious', 'counter', 'general', 'healthy', 'library', 'massive', 'quarter', 'reflect']
-    value = randint(0,8)
-    if difficulty == "Easy":
-        return easyStrings[value]
-    elif difficulty == "Medium":
-        return medStrings[value]
-    else:
-        return hardStrings[value]
+    listOfWords = []
+    with open("./" + difficulty + "_Strings.csv", 'r') as file:
+        csvreader = csv.reader(file)
+        for row in csvreader:
+            listOfWords.append(row[0])
+        value = randint(0, len(listOfWords))
+        print(value)
+        return listOfWords[value]
 
 def lostGame(wordToGuess):
     event, values = sg.Window('Loser', [[sg.Text('You lost the game. The word was ' + wordToGuess + '. Would you like to play again?'), sg.Listbox(['Yes', 'No'], size=(20, 3), key='LB')],
