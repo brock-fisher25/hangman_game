@@ -98,7 +98,7 @@ def updateLetters(listOfLetters, guessedLetter):
 
 def getRandomWord(difficulty):
     listOfWords = []
-    with open("./" + difficulty + "Strings.csv", 'r') as file:
+    with open("./" + difficulty + "_Strings.csv", 'r') as file:
         csvreader = csv.reader(file)
         for row in csvreader:
             listOfWords.append(row[0])
