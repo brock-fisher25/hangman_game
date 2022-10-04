@@ -17,7 +17,7 @@ def start():
 
 def begin_game(difficulty):
     wordToGuess = getRandomWord(difficulty)
-    print(wordToGuess)
+    wordToGuess = wordToGuess[0].lower() + wordToGuess[1:]
     letterGuessedCorrect = [False for i in range(len(wordToGuess))]
     pygame.init()
     white = (255, 255, 255)
@@ -98,12 +98,11 @@ def updateLetters(listOfLetters, guessedLetter):
 
 def getRandomWord(difficulty):
     listOfWords = []
-    with open("./" + difficulty + "_Strings.csv", 'r') as file:
+    with open("./" + difficulty + "_words.csv", 'r') as file:
         csvreader = csv.reader(file)
         for row in csvreader:
             listOfWords.append(row[0])
         value = randint(0, len(listOfWords))
-        print(value)
         return listOfWords[value]
 
 def lostGame(wordToGuess):
